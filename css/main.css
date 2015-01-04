@@ -187,8 +187,16 @@ main {
 
 #carimg {
   background-position: center center;
-  background-size: 100%;
+  background-size: 120%;
   background-repeat: no-repeat;
   border: 1px solid #333;
   background-color: #FFF;
+}
+
+.control {
+  margin-bottom: 1em;
+}
+
+.panic {
+  background-color: red !important;
 }

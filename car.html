@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html class="page">
+  <head>
+    <title>PNEUMATIC</title>
+    <meta name="viewport" content="minimal-ui">
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Montserrat">
+    <link rel="stylesheet" type="text/css" href="css/nomalize.css" />
+    <link rel="stylesheet" type="text/css" href="css/main.css" />
+    <script src="js/request.js"></script>
+    <script type="text/javascript">
+      
+      function getQueryStringValue (key) {  
+        return unescape(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + escape(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));  
+      }
+      
+      window.addEventListener('load', function () {
+        
+        var vin = getQueryStringValue('vin');
+        
+        document.getElementById('lock').addEventListener('click', function () {
+          AJAX({type: 'POST', url: '/remoteservices/v1/vehicle/lock/' + vin, data: {}, success: function (d) {
+            console.log(d);
+          }, error: function (d) {console.log(d)}});
+        });
+        
+        document.getElementById('unlock').addEventListener('click', function () {
+          AJAX({type: 'POST', url: '/remoteservices/v1/vehicle/unlock/' + vin, data: {}, success: function (d) {
+            console.log(d);
+          }, error: function (d) {console.log(d)}});
+        });
+        
+        document.getElementById('on').addEventListener('click', function () {
+          AJAX({type: 'POST', url: '/remoteservices/v1/vehicle/engineOn/' + vin, data: {}, success: function (d) {
+            console.log(d);
+          }, error: function (d) {console.log(d)}});
+        });
+        
+        document.getElementById('off').addEventListener('click', function () {
+          AJAX({type: 'POST', url: '/remoteservices/v1/vehicle/engineOff/' + vin, data: {}, success: function (d) {
+            console.log(d);
+          }, error: function (d) {console.log(d)}});
+        });
+        
+        document.getElementById('trunk').addEventListener('click', function () {
+          AJAX({type: 'POST', url: '/remoteservices/v1/vehicle/openTrunk/' + vin, data: {}, success: function (d) {
+            console.log(d);
+          }, error: function (d) {console.log(d)}});
+        });
+        
+        document.getElementById('carimg').addEventListener('click', function () {
+          AJAX({type: 'POST', url: '/remoteservices/v1/vehicle/honkBlink/' + vin, data: {}, success: function (d) {
+            AJAX({type: 'POST', url: '/remoteservices/v1/vehicle/honkBlink/' + vin, data: {}, success: function (d) {
+              console.log(d);
+            }, error: function (d) {console.log(d)}});
+          }, error: function (d) {console.log(d)}});
+        });
+        
+        document.getElementById('panic').addEventListener('click', function () {
+          
+          
+          var panic = setInterval(function () {
+            
+            AJAX({type: 'POST', url: '/remoteservices/v1/vehicle/honkBlink/' + vin, data: {}, success: function (d) {
+              console.log(d);
+            }, error: function (d) {console.log(d)}});  
+            
+          }, 1500);
+          
+          setTimeout(function () {
+            clearInterval(panic);
+          }, 15000);
+          
+        });
+        
+        AJAX({type: 'POST', url: '/remoteservices/v1/vehicle/status/view/' + vin, data: {}, success: function (d) {
+          
+          
+          AJAX({type: 'GET', url: '/remoteservices/v1/vehicle/status/'+vin+'/'+d.requestId, data: {}, success: function (d) {console.log(d)}, error: function (d) {console.log(d)}});
+          
+        }, error: function (d) {console.log(d)}});
+        
+        AJAX({type: 'GET', url: '/vehicles/v1/vehicle/view/'+vin, data: {}, success: function (d) {
+            
+            var car = d;
+              
+            document.getElementById('model').innerHTML = car.model;
+            document.getElementById('make').innerHTML = car.make;
+            // Should be license but it's not set, so something that looks like it...
+            document.getElementById('plate').innerHTML = 'NV: HJ87364';
+            
+            document.getElementById('carimg').style.backgroundImage = 'url(img/fiat.jpg)';
+        
+        }, error: function (d) {console.log(d)}});
+        
+      });
+    </script>
+  </head>
+  <body>
+    <header>
+      <h1>Pneumatic</h1>
+    </header>
+    <main class="base">
+      <section class="find">
+        <div class="details">
+          <div class="vehicle" id="carimg">
+          </div>
+          <span id="make">Make</span>
+          <span id="model">Model</span>
+          <span id="plate">Plate</span>
+        </div>
+        <a href="#" class="button cta control" id="lock">Lock</a>
+        <a href="#" class="button cta control" id="unlock">Unlock</a>
+        <a href="#" class="button cta control" id="on">Engine On</a>
+        <a href="#" class="button cta control" id="off">Engine Off</a>
+        <!-- Make car image ping the car -->
+        <!-- <a href="#" class="button cta">Ping</a> -->
+        <a href="#" class="button cta control" id="trunk">Open Trunk</a>
+        <a href="#" class="button cta control panic" id="panic">Panic</a>
+      </section>
+    </main>
+  </body>
+</html>

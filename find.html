@@ -18,39 +18,37 @@
         var loc = {};
         loc.lat = getQueryStringValue('lat');
         loc.long = getQueryStringValue('long');
-        
-        navigator.geolocation.getCurrentPosition(function (evt) {
           
-          var xhr = new XMLHttpRequest();
-          xhr.open('GET', 'https://api.tcsltk.com/api/v2/search/json?search_center='+loc.lat+','+loc.long+'&query=car%20rental&apikey=UQFff5wRPoim2xiXZIHdbQqQtTcGATvomrGl0zpA&uid=d00dad12345678901234567890123456&pid=415203', true);
-          xhr.addEventListener('load', function () {
-            var data = JSON.parse(this.response);
-            var place = data.places[3];
-           
-            var xhr2 = new XMLHttpRequest();
-            xhr2.open('GET', 'https://api.tcsltk.com/api/v2/map/png?center='+place.location.coordinate.latitude+','+place.location.coordinate.longitude+'&scale=1&width=1000&height=500&ppi=318&apikey=UQFff5wRPoim2xiXZIHdbQqQtTcGATvomrGl0zpA&uid=d00dad12345678901234567890123456&pid=415203', true);
-            xhr2.addEventListener('load', function (data) {
-              AJAX({type: 'POST', url: '/vehicles/v1/vehicle/search', data: {query: 'status:demo'}, success: function (d) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'https://api.tcsltk.com/api/v2/search/json?search_center='+loc.lat+','+loc.long+'&query=car%20rental&apikey=UQFff5wRPoim2xiXZIHdbQqQtTcGATvomrGl0zpA&uid=d00dad12345678901234567890123456&pid=415203', true);
+        xhr.addEventListener('load', function () {
+          var data = JSON.parse(this.response);
+          var place = data.places[3];
+         
+          var xhr2 = new XMLHttpRequest();
+          xhr2.open('GET', 'https://api.tcsltk.com/api/v2/map/png?center='+place.location.coordinate.latitude+','+place.location.coordinate.longitude+'&scale=1&width=1000&height=500&ppi=318&apikey=UQFff5wRPoim2xiXZIHdbQqQtTcGATvomrGl0zpA&uid=d00dad12345678901234567890123456&pid=415203', true);
+          xhr2.addEventListener('load', function (data) {
+            AJAX({type: 'POST', url: '/vehicles/v1/vehicle/search', data: {query: 'status:demo'}, success: function (d) {
 
-                var car = d[0];
-                console.log(car);
-                document.getElementById('model').innerHTML = car.model;
-                document.getElementById('make').innerHTML = car.make;
-                // Should be license but it's not set, so something that looks like it...
-                document.getElementById('plate').innerHTML = 'NV: HJ87364';
-                
-                document.getElementById('carimg').style.backgroundImage = 'url(img/fiat.jpg)';
-                
-              }, error: function (d) {console.log('error!')}});
-              document.getElementById('result').style.backgroundImage = 'url(data:image/png;base64,'+ JSON.parse(this.response).image + ')';
-            })
-            xhr2.send();
-           
-           
+              var car = d[0];
+              
+              document.getElementById('model').innerHTML = car.model;
+              document.getElementById('make').innerHTML = car.make;
+              // Should be license but it's not set, so something that looks like it...
+              document.getElementById('plate').innerHTML = 'NV: HJ87364';
+              
+              document.getElementById('carimg').style.backgroundImage = 'url(img/fiat.jpg)';
+              
+              document.getElementById('reserve').href = document.getElementById('reserve').href + '?vin='+car.vin;
+              
+            }, error: function (d) {console.log('error!')}});
+            document.getElementById('result').style.backgroundImage = 'url(data:image/png;base64,'+ JSON.parse(this.response).image + ')';
           })
-          xhr.send();
-          
-        });
+          xhr2.send();
+         
+         
+        })
+        xhr.send();
         
       });
     </script>
@@ -71,7 +69,7 @@
         <div class="car" id="result">
           <span></span>
         </div>
-        <a href="#" class="button cta">Reserve</a>
+        <a href="car.html" class="button cta" id="reserve">Reserve</a>
       </section>
     </main>
   </body>
