@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="request.js"></script>
+    <script type="text/javascript">
+      window.addEventListener('load', function () {
+        AJAX({type: 'POST', url: '/vehicles/v1/vehicle/search', data: {query: 'status:demo'}, success: function (d) {console.log(d)}, error: function (d) {console.log(d)}});
+        AJAX({type: 'POST', url: '/remoteservices/v1/vehicle/unlock/1XACR15X0TTA00003', data: {requestId: 12}, success: function (d) {console.log(d)}, error: function (d) {console.log(d)}});
+        AJAX({type: 'POST', url: '/remoteservices/v1/vehicle/diagnostics/view/1XACR15X0TTA00003', data: {}, success: function (d) {
+          
+          
+          AJAX({type: 'GET', url: '/remoteservices/v1/vehicle/status/1XACR15X0TTA00003/'+d.requestId, data: {}, success: function (d) {console.log(d)}, error: function (d) {console.log(d)}});
+          
+        }, error: function (d) {console.log(d)}});
+      });
+    </script>
+  </head>
+  <body>
+  </body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html class="page">
+  <head>
+    <title>PNEUMATIC</title>
+    <meta name="viewport" content="minimal-ui">
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Montserrat">
+    <link rel="stylesheet" type="text/css" href="css/nomalize.css" />
+    <link rel="stylesheet" type="text/css" href="css/main.css" />
+    <script type="text/javascript">
+      
+      function getQueryStringValue (key) {  
+        return unescape(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + escape(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));  
+      }
+      
+      window.addEventListener('load', function () {
+        
+        var loc = {};
+        loc.lat = getQueryStringValue('lat');
+        loc.long = getQueryStringValue('long');
+        
+        navigator.geolocation.getCurrentPosition(function (evt) {
+          
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', 'https://api.tcsltk.com/api/v2/search/json?search_center='+loc.lat+','+loc.long+'&query=car%20rental&apikey=UQFff5wRPoim2xiXZIHdbQqQtTcGATvomrGl0zpA&uid=d00dad12345678901234567890123456&pid=415203', true);
+          xhr.addEventListener('load', function () {
+            var data = JSON.parse(this.response);
+            var place = data.places[3];
+            
+            console.log(place);
+           
+            var xhr2 = new XMLHttpRequest();
+            xhr2.open('GET', 'https://api.tcsltk.com/api/v2/map/png?center='+place.location.coordinate.latitude+','+place.location.coordinate.longitude+'&scale=1&width=1000&height=500&ppi=318&apikey=UQFff5wRPoim2xiXZIHdbQqQtTcGATvomrGl0zpA&uid=d00dad12345678901234567890123456&pid=415203', true);
+            xhr2.addEventListener('load', function (data) {
+             document.getElementById('result').style.backgroundImage = 'url(data:image/png;base64,'+ JSON.parse(this.response).image + ')';
+            })
+            xhr2.send();
+           
+           
+          })
+          xhr.send();
+          
+        });
+        
+      });
+    </script>
+  </head>
+  <body>
+    <header>
+      <h1>Pneumatic</h1>
+    </header>
+    <main class="base">
+      <section class="find">
+        <div class="car" id="result">
+          <span></span>
+        </div>
+        <a href="#" class="button cta">Reserve</a>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html class="page">
+  <head>
+    <title>PNEUMATIC</title>
+    <meta name="viewport" content="minimal-ui">
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Montserrat">
+    <link rel="stylesheet" type="text/css" href="css/nomalize.css" />
+    <link rel="stylesheet" type="text/css" href="css/main.css" />
+    <script type="text/javascript">
+      window.addEventListener('load', function () {
+        navigator.geolocation.getCurrentPosition(function (evt) {
+          console.log(evt.coords);
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', 'https://api.tcsltk.com/api/v2/map/png?center='+evt.coords.latitude+','+evt.coords.longitude+'&scale=1&width=1000&height=500&ppi=318&apikey=UQFff5wRPoim2xiXZIHdbQqQtTcGATvomrGl0zpA&uid=d00dad12345678901234567890123456&pid=415203', true);
+          xhr.addEventListener('load', function (data) {
+           document.getElementById('current').style.backgroundImage = 'url(data:image/png;base64,'+ JSON.parse(this.response).image + ')';
+          })
+          xhr.send();
+          document.getElementById('find').setAttribute('href', 'find.html?'+'lat='+evt.coords.latitude+'&long='+evt.coords.longitude);
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <header>
+      <h1>Pneumatic</h1>
+    </header>
+    <main class="base">
+      <section class="user">
+        <div class="avatar">
+          <img />
+        </div>
+        <div class="data">
+          <span class="item">[First] [Last]</span>
+          <span class="item">[Location]</span>
+          <span class="item">[Member Alias]</span>
+        </div>
+        <div id="current" class="location">
+          <span></span>
+        </div>
+        <a href="find.html" class="button cta" id="find">Find a car</a>
+        <a href="#" class="button cta settings">Settings</a>
+      </section>
+    </main>
+  </body>
+</html>
