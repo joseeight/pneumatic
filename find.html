@@ -39,6 +39,8 @@
               
               document.getElementById('reserve').href = document.getElementById('reserve').href + '?vin='+car.vin;
               
+              document.getElementById('loading').style.display = 'none';
+              
             }, error: function (d) {console.log('error!')}});
             document.getElementById('result').style.backgroundImage = 'url(data:image/png;base64,'+ JSON.parse(this.response).image + ')';
           })
@@ -70,5 +72,6 @@
         <a href="car.html" class="button cta" id="reserve">Reserve</a>
       </section>
     </main>
+    <div id="loading"></div>
   </body>
 </html>
