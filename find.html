@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Montserrat">
     <link rel="stylesheet" type="text/css" href="css/nomalize.css" />
     <link rel="stylesheet" type="text/css" href="css/main.css" />
+    <script src="js/request.js"></script>
     <script type="text/javascript">
       
       function getQueryStringValue (key) {  
@@ -25,13 +26,23 @@
           xhr.addEventListener('load', function () {
             var data = JSON.parse(this.response);
             var place = data.places[3];
-            
-            console.log(place);
            
             var xhr2 = new XMLHttpRequest();
             xhr2.open('GET', 'https://api.tcsltk.com/api/v2/map/png?center='+place.location.coordinate.latitude+','+place.location.coordinate.longitude+'&scale=1&width=1000&height=500&ppi=318&apikey=UQFff5wRPoim2xiXZIHdbQqQtTcGATvomrGl0zpA&uid=d00dad12345678901234567890123456&pid=415203', true);
             xhr2.addEventListener('load', function (data) {
-             document.getElementById('result').style.backgroundImage = 'url(data:image/png;base64,'+ JSON.parse(this.response).image + ')';
+              AJAX({type: 'POST', url: '/vehicles/v1/vehicle/search', data: {query: 'status:demo'}, success: function (d) {
+
+                var car = d[0];
+                console.log(car);
+                document.getElementById('model').innerHTML = car.model;
+                document.getElementById('make').innerHTML = car.make;
+                // Should be license but it's not set, so something that looks like it...
+                document.getElementById('plate').innerHTML = 'NV: HJ87364';
+                
+                document.getElementById('carimg').style.backgroundImage = 'url(img/fiat.jpg)';
+                
+              }, error: function (d) {console.log('error!')}});
+              document.getElementById('result').style.backgroundImage = 'url(data:image/png;base64,'+ JSON.parse(this.response).image + ')';
             })
             xhr2.send();
            
@@ -50,6 +61,13 @@
     </header>
     <main class="base">
       <section class="find">
+        <div class="details">
+          <div class="vehicle" id="carimg">
+          </div>
+          <span id="make">Make</span>
+          <span id="model">Model</span>
+          <span id="plate">Plate</span>
+        </div>
         <div class="car" id="result">
           <span></span>
         </div>

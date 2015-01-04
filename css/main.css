@@ -128,7 +128,7 @@ main {
   display: block;
 }
 
-.base .avatar {
+.base .avatar, .find .vehicle {
   width: 250px;
   height: 250px;
   background: #CCC;
@@ -165,4 +165,30 @@ main {
 .cta.settings {
   margin-top: 1em;
   background-color: #CCC;
+}
+
+.details {
+  width: 100%;
+  text-align: left;
+  margin-bottom: 3em;
+}
+
+
+.vehicle {
+  float: left;
+}
+
+.details span {
+  font-size: 3em;
+  display: block;
+  text-indent: 1em;
+  padding-top: .4em;
+}
+
+#carimg {
+  background-position: center center;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  border: 1px solid #333;
+  background-color: #FFF;
 }
